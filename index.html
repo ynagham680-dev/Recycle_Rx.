@@ -82,7 +82,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 <div class="card">
 <h2>البحث في قاعدة بيانات الأدوية العالمية</h2>
 <div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
-<input id="apiSearchInput" placeholder="اكتب اسم الدواء بالإنجليزي (مثل Panadol, Aspirin, Ibuprofen)..." style="flex:1;min-width:250px;padding:12px;border:1px solid #d7e4e0;border-radius:10px">
+<input id="apiSearchInput" placeholder="اكتب اسم الدواء بالإنجليزي (مثل Panadol, Paracetamol, Aspirin)..." style="flex:1;min-width:250px;padding:12px;border:1px solid #d7e4e0;border-radius:10px">
 <button class="primary" onclick="searchFDA()">بحث عن الدواء</button>
 </div>
 <div id="searchLoading" class="alert" style="display:none;background:#eef7f5;border-color:#1f7167">جاري البحث في القاعدة الرسمية... ⏳</div>
@@ -246,10 +246,18 @@ async function searchFDA(){
  loadBox.style.display = 'block';
 
  try {
-  // بحث موسع يشمل الاسم التجاري والعلمي والمادة الفعالة
-  const query = `openfda.brand_name:"${q}"+openfda.generic_name:"${q}"+openfda.substance_name:"${q}"`;
-  const res = await fetch(`https://api.fda.gov/drug/label.json?search=${query}&limit=1`);
-  const data = await res.json();
+  // محاولة 1: البحث في جميع الحقول بأسلوب سلس
+  let url = `https://api.fda.gov/drug/label.json?search=openfda.brand_name:${encodeURIComponent(q)}+openfda.generic_name:${encodeURIComponent(q)}&limit=1`;
+  let res = await fetch(url);
+  let data = await res.json();
+
+  // محاولة 2: البحث بكلمة عامة إذا فشلت الأولى
+  if(!data.results){
+    url = `https://api.fda.gov/drug/label.json?search=${encodeURIComponent(q)}&limit=1`;
+    res = await fetch(url);
+    data = await res.json();
+  }
+
   loadBox.style.display = 'none';
 
   if(data.results && data.results.length > 0){
@@ -264,7 +272,7 @@ async function searchFDA(){
   }
  } catch(e){
   loadBox.style.display = 'none';
-  errBox.innerHTML = `لم يتم العثور على اسم العلامة التجارية المحلية <b>"${q}"</b>.<br>💡 <b>نصيحة:</b> جربي البحث عن المادة الفعالة بدلاً من الاسم التجاري (مثلاً لـ Rivanine ابحثي عن <b>Paracetamol</b> أو <b>Acetaminophen</b>).`;
+  errBox.innerHTML = `لم يتم العثور على اسم العلامة التجارية التجارية المحلية <b>"${q}"</b> في قاعدة البيانات الأمريكية.<br><br>💡 <b>نصيحة:</b> جربي البحث عن المادة الفعالة بدلاً من الاسم التجاري (مثلاً لـ Revanin أو Rivanine ابحثي عن <b>Paracetamol</b> أو <b>Acetaminophen</b>).`;
   errBox.style.display = 'block';
  }
 }
