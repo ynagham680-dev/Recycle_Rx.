@@ -25,6 +25,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 <div class="app">
 <aside class="side"><div class="logo">Pharma<span>Guard</span></div><div class="nav">
 <button class="active" onclick="show('dashboard',this)">لوحة التحكم</button>
+<button onclick="show('drugSearch',this)">🔍 البحث عن الدواء</button>
 <button onclick="show('register',this)">تسجيل دواء / نفاية</button>
 <button onclick="show('tracking',this)">تتبع QR</button>
 <button onclick="show('assessment',this)">التصنيف البيئي</button>
@@ -75,6 +76,27 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 </table></div>
 </section>
 
+<!-- قسم البحث المباشر عن الدواء -->
+<section id="drugSearch" class="page">
+<div class="top"><div><h1>الاستعلام والبحث عن الأدوية</h1><div class="muted">ابحث عن الدواء للتحقق من المادة الفعالة ودواعي الاستعمال بواسطة OpenFDA API</div></div></div>
+<div class="card">
+<h2>البحث في قاعدة بيانات الأدوية العالمية</h2>
+<div style="display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap">
+<input id="apiSearchInput" placeholder="اكتب اسم الدواء بالإنجليزي (مثل Panadol, Aspirin, Ibuprofen)..." style="flex:1;min-width:250px;padding:12px;border:1px solid #d7e4e0;border-radius:10px">
+<button class="primary" onclick="searchFDA()">بحث عن الدواء</button>
+</div>
+<div id="searchLoading" class="alert" style="display:none;background:#eef7f5;border-color:#1f7167">جاري البحث في القاعدة الرسمية... ⏳</div>
+<div id="searchError" class="alert danger" style="display:none">لم يتم العثور على بيانات لهذا الدواء، تأكد من كتابة الاسم بالإنجليزي بشكل صحيح.</div>
+
+<div id="searchResult" style="display:none;margin-top:15px;background:#f8fbfb;padding:18px;border-radius:12px;border:1px solid #d7e4e0">
+<h2 id="resBrand" style="color:#1f7167;margin-top:0">-</h2>
+<p><b>المادة الفعالة (Active Ingredient):</b> <span id="resActive">-</span></p>
+<p><b>دواعي الاستخدام (Purpose):</b> <span id="resPurpose">-</span></p>
+<p><b>التحذيرات وطريقة الاستخدام:</b> <span id="resWarnings">-</span></p>
+</div>
+</div>
+</section>
+
 <section id="register" class="page">
 <div class="top"><div><h1>تسجيل دواء / نفاية دوائية</h1><div class="muted">أدخل بيانات منشأة/حالة تجريبية — لا تُدخل بيانات مرضى أو أدوية حساسة.</div></div></div>
 <div class="card"><div class="formgrid">
@@ -121,7 +143,6 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 </div><div class="alert">الخطوة الحالية: النقل إلى جهة معالجة/استلام مؤهلة.</div></div><div style="text-align:center"><div class="qr"></div><p><b>QR: PG-0128</b></p><button class="secondary" onclick="alert('في النسخة الحقيقية يتم تحديث الحالة من قاعدة البيانات عند مسح QR.')">محاكاة مسح QR</button></div></div></div>
 </section>
 
-
 <section id="logistics" class="page">
   <div class="top">
     <div><h1>الجمع واللوجستيات</h1>
@@ -165,6 +186,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 <div class="card" style="margin-top:18px"><h2>أسئلة الاستطلاع المقترحة</h2><ol><li>كمية النفايات الدوائية التقريبية شهرياً؟</li><li>ما الطريقة المعتادة للتعامل معها؟</li><li>هل يتم فصل النفايات الدوائية عن النفايات العامة؟</li><li>هل توجد آلية موثقة للجمع والتخلص؟</li><li>ما أكثر أنواع النفايات الدوائية شيوعاً؟</li></ol><p class="muted">لا تجمعوا أسماء مرضى أو وصفات أو بيانات شخصية غير لازمة للمشروع.</p></div>
 </section>
 </main></div>
+
 <script>
 let counter=128;
 function show(id,btn){
@@ -173,6 +195,7 @@ function show(id,btn){
  document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));
  if(btn) btn.classList.add('active');
 }
+
 function assess(){
  counter++;
  const id='PG-'+String(counter).padStart(4,'0');
@@ -209,6 +232,38 @@ function lookupQR(){
    result.innerHTML='<b>'+value+'</b> — سجل تجريبي تم العثور عليه. الحالة الحالية: النقل إلى جهة معالجة/استلام مؤهلة.';
  }
  result.style.display='block';
+}
+
+async function searchFDA(){
+ const q = document.getElementById('apiSearchInput').value.trim();
+ const resBox = document.getElementById('searchResult');
+ const errBox = document.getElementById('searchError');
+ const loadBox = document.getElementById('searchLoading');
+
+ if(!q) return;
+ resBox.style.display = 'none';
+ errBox.style.display = 'none';
+ loadBox.style.display = 'block';
+
+ try {
+  const res = await fetch(`https://api.fda.gov/drug/label.json?search=openfda.brand_name:"${q}"+openfda.generic_name:"${q}"&limit=1`);
+  const data = await res.json();
+  loadBox.style.display = 'none';
+
+  if(data.results && data.results.length > 0){
+   const drug = data.results[0];
+   document.getElementById('resBrand').innerText = drug.openfda?.brand_name?.[0] || q;
+   document.getElementById('resActive').innerText = drug.active_ingredient?.[0] || drug.openfda?.substance_name?.[0] || 'غير محدد';
+   document.getElementById('resPurpose').innerText = (drug.purpose?.[0] || drug.indications_and_usage?.[0] || 'غير متوفر').substring(0, 300) + '...';
+   document.getElementById('resWarnings').innerText = (drug.warnings?.[0] || 'يرجى مراجعة النشرة الطبية المرفقة.').substring(0, 300) + '...';
+   resBox.style.display = 'block';
+  } else {
+   errBox.style.display = 'block';
+  }
+ } catch(e){
+  loadBox.style.display = 'none';
+  errBox.style.display = 'block';
+ }
 }
 </script>
 </body></html>
