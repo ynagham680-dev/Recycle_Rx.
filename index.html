@@ -9,9 +9,9 @@
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f5f8f7;color:#173b3a}
 button,input,select,textarea{font:inherit}button{cursor:pointer}
-.app{display:flex;min-height:100vh}.side{width:240px;background:#123f3d;color:white;padding:25px 16px;position:fixed;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between}
+.app{display:flex;min-height:100vh}.side{width:240px;background:#123f3d;color:white;padding:25px 16px;position:fixed;right:0;top:0;bottom:0;display:flex;flex-direction:column;justify-content:space-between;z-index:100}
 .logo{font-size:25px;font-weight:800;padding:10px 12px 28px}.logo span{color:#8ee0c0}
-.nav button{display:block;width:100%;text-align:right;border:0;background:transparent;color:#d7ebe6;padding:14px 15px;border-radius:12px;margin:4px 0}.nav button.active,.nav button:hover{background:#21625e;color:#fff}
+.nav button{display:block;width:100%;text-align:right;border:0;background:transparent;color:#d7ebe6;padding:12px 14px;border-radius:12px;margin:3px 0;font-size:14px}.nav button.active,.nav button:hover{background:#21625e;color:#fff}
 .main{margin-right:240px;width:calc(100% - 240px);padding:30px;max-width:1500px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.top h1{margin:0;font-size:28px}.badge{background:#dff5ec;color:#17634f;padding:8px 13px;border-radius:20px;font-weight:700}
 .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.card{background:#fff;border:1px solid #e4eeeb;border-radius:18px;padding:20px;box-shadow:0 5px 20px #123f3d0b}.metric{font-size:30px;font-weight:800;margin-top:8px}.muted{color:#718785;font-size:13px}.row{display:grid;grid-template-columns:1.3fr 1fr;gap:18px;margin-top:18px}.card h2{font-size:18px;margin:0 0 15px}.chart{height:210px;display:flex;align-items:end;gap:15px;padding:10px 10px 5px}.bar{flex:1;background:#6bb9a5;border-radius:8px 8px 2px 2px;min-height:20px;position:relative}.bar small{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;color:#718785}
 table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px solid #edf2f0;text-align:right;font-size:14px}.status{padding:5px 9px;border-radius:14px;background:#e9f5ef;color:#17634f;font-size:12px}.risk{background:#fff2db;color:#9a6500}.danger{background:#fde9e7;color:#a73b35}
@@ -20,6 +20,8 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 .qr-box{padding:10px;background:#fff;border:1px solid #cadbd6;border-radius:12px;display:inline-block;margin:auto}
 .map{height:260px;border-radius:15px;background:#e5f1ee;position:relative;overflow:hidden}.jordan{position:absolute;left:35%;top:15%;width:32%;height:72%;background:#8dc6b7;clip-path:polygon(45% 0,72% 12%,78% 32%,94% 45%,78% 61%,70% 84%,42% 100%,27% 78%,8% 70%,21% 47%,9% 29%,28% 17%)}.pin{position:absolute;width:13px;height:13px;background:#d66a5f;border:3px solid white;border-radius:50%;box-shadow:0 2px 6px #0004}
 .alert{padding:15px;border-radius:12px;background:#fff7e6;border-right:4px solid #e8a83c;margin-top:15px}.score{font-size:42px;font-weight:800;color:#238a73}.pillrow{display:flex;gap:8px;flex-wrap:wrap}.pill{padding:8px 12px;background:#edf6f3;border-radius:18px;font-size:13px}
+.home-card{background:linear-gradient(135deg, #123f3d, #21625e);color:white;padding:25px;border-radius:20px;margin-bottom:20px}
+.home-card h2{color:#8ee0c0;margin-top:0}.eco-badge{display:inline-block;padding:6px 14px;background:#8ee0c0;color:#123f3d;border-radius:20px;font-weight:bold;font-size:13px}
 .copyright-footer{margin-top:25px;padding-top:15px;border-top:1px solid #e4eeeb;text-align:center;font-size:12px;color:#718785}
 @media(max-width:850px){.side{width:75px}.logo{font-size:0}.logo span{font-size:22px}.nav button{font-size:0;text-align:center}.nav button:before{content:"•";font-size:25px}.main{margin-right:75px;width:calc(100% - 75px);padding:18px}.grid{grid-template-columns:1fr 1fr}.row{grid-template-columns:1fr}.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}}
 </style>
@@ -31,6 +33,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
   <div class="logo">Pharma<span>Guard</span></div>
   <div class="nav">
     <button class="active" onclick="show('dashboard',this)">لوحة التحكم</button>
+    <button onclick="show('household',this)">🏠 خدمة المنازل والأفراد</button>
     <button onclick="show('drugSearch',this)">🔍 البحث عن الدواء</button>
     <button onclick="show('register',this)">تسجيل دواء / نفاية</button>
     <button onclick="show('tracking',this)">تتبع QR</button>
@@ -46,6 +49,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 </aside>
 
 <main class="main">
+<!-- لوحة التحكم -->
 <section id="dashboard" class="page active">
 <div class="top"><div><h1>Recycle Rx Jordan</h1><div class="muted">منصة ذكية لتتبع النفايات الدوائية ودعم الاقتصاد الدائري في الأردن</div></div><span class="badge">Concept Prototype • 2026</span></div>
 <div class="alert" style="margin-bottom:18px">
@@ -54,42 +58,78 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 </div>
 <div class="grid">
 <div class="card"><div class="muted">الأدوية المسجلة</div><div class="metric" id="statRegistered">128</div><div class="muted">بيانات تجريبية</div></div>
-<div class="card"><div class="muted">قريبة من الانتهاء</div><div class="metric">24</div><div class="muted">تنبيه مبكر</div></div>
+<div class="card"><div class="muted">مساهمات المنازل</div><div class="metric" id="statHousehold">45</div><div class="muted">تسليم أفراد</div></div>
 <div class="card"><div class="muted">تحتاج معالجة خاصة</div><div class="metric">17</div><div class="muted">للمراجعة</div></div>
 <div class="card"><div class="muted">عبوات للتدوير</div><div class="metric" id="statRecycle">31</div><div class="muted">مرشحة بحثيًا</div></div>
 </div>
 <div class="row">
-<div class="card"><h2>توزيع السجلات حسب المحافظة</h2><div class="chart"><div class="bar" style="height:80%"><small>عمّان</small></div><div class="bar" style="height:48%"><small>إربد</small></div><div class="bar" style="height:34%"><small>الزرقاء</small></div><div class="bar" style="height:22%"><small>الكرك</small></div><div class="bar" style="height:30%"><small>أخرى</small></div></div></div>
-<div class="card"><h2>خريطة البلاغات</h2><div class="map"><div class="jordan"></div><i class="pin" style="left:55%;top:40%"></i><i class="pin" style="left:48%;top:55%"></i><i class="pin" style="left:60%;top:62%"></i><i class="pin" style="left:43%;top:70%"></i></div></div>
+<div class="card"><h2>توزيع السجلات حسب المحافظة</h2><div class="chart"><div class="bar" style="height:80%"><small>عمّان</small></div><div class="bar" style="height:48%"><small>إربد</small></div><div class="bar" style="height:34%"><small>الزرقاء</small></div><div class="bar" style="height:55%"><small>الكرك</small></div><div class="bar" style="height:30%"><small>أخرى</small></div></div></div>
+<div class="card"><h2>خريطة البلاغات ونقاط الجمع</h2><div class="map"><div class="jordan"></div><i class="pin" style="left:55%;top:40%"></i><i class="pin" style="left:48%;top:55%"></i><i class="pin" style="left:60%;top:62%"></i><i class="pin" style="left:43%;top:70%"></i></div></div>
 </div>
 
-<div class="row">
-  <div class="card">
-    <h2>تنبيه انتهاء الصلاحية</h2>
-    <p><b>Drug A</b> — متبقٍ 4 أشهر على الانتهاء.</p>
-    <span class="status risk">تنبيه مبكر • 3–6 أشهر</span>
-    <p class="muted">يوصى بمراجعة الإرجاع أو تخصيصه للجمع وفق الإجراءات المعتمدة.</p>
-  </div>
-  <div class="card">
-    <h2>التصنيف البيئي</h2>
-    <div class="pillrow">
-      <span class="pill">نفايات دوائية/كيميائية</span>
-      <span class="pill">بلاستيك قابل للتدوير</span>
-      <span class="pill">زجاج قابل للتدوير</span>
-    </div>
-    <p class="muted" style="margin-top:12px">التصنيف في هذا النموذج أولي وبحثي.</p>
-  </div>
-</div>
-<div class="card" style="margin-top:18px"><h2>آخر السجلات</h2>
+<div class="card" style="margin-top:18px"><h2>آخر السجلات المسجلة</h2>
 <table id="recentTable">
-<tr><th>ID</th><th>المنشأة</th><th>النوع</th><th>المحافظة</th><th>الحالة</th></tr>
-<tr><td>PG-0128</td><td>صيدلية تجريبية</td><td>أدوية منتهية</td><td>عمّان</td><td><span class="status">مسجل</span></td></tr>
-<tr><td>PG-0127</td><td>صيدلية تجريبية</td><td>عبوات دوائية</td><td>الكرك</td><td><span class="status">تم الجمع</span></td></tr>
+<tr><th>ID</th><th>المنشأة / المصدر</th><th>النوع</th><th>المحافظة</th><th>الحالة</th></tr>
+<tr><td>PG-0128</td><td>مساهمة منزلية</td><td>عبوات زجاجية وفائض</td><td>الكرك</td><td><span class="status">بانتظار التسليم</span></td></tr>
+<tr><td>PG-0127</td><td>صيدلية تجريبية</td><td>عبوات دوائية</td><td>عمّان</td><td><span class="status">تم الجمع</span></td></tr>
 <tr><td>PG-0126</td><td>منشأة صحية</td><td>نفايات دوائية</td><td>إربد</td><td><span class="status risk">تقييم</span></td></tr>
 </table></div>
 </section>
 
-<!-- قسم البحث المباشر عن الدواء -->
+<!-- قسم خدمة المنازل والأفراد الجيد -->
+<section id="household" class="page">
+<div class="top"><div><h1>خدمة الأسر والمنازل (Green Home Portal)</h1><div class="muted">ساهم في حماية البيئة والمياه الجوفية بإعادة تدوير العبوات والتخلص الآمن من الأدوية المنزلية</div></div></div>
+
+<div class="home-card">
+  <h2>🏡 كيف تساعدك منصة Recycle Rx في منزلك؟</h2>
+  <p>بدلاً من رمي الأدوية في النفايات المنزلية أو الصرف الصحي، يتيح لك النظام تسليم العبوات والأدوية المنتهية لأقرب صيدلية معتمدة وتجميع نقاط بيئية تشجيعية!</p>
+  <span class="eco-badge">🌱 رصيدك الحالي: <span id="userPoints">150</span> نقطة خضراء</span>
+</div>
+
+<div class="row">
+  <div class="card">
+    <h2>تسجيل دواء أو عبوة منزلية</h2>
+    <div class="field" style="margin-bottom:12px">
+      <label>اسم الدواء أو نوع العبوة</label>
+      <input id="hItem" placeholder="مثال: شراب معلق / عبوة زجاجية فارغة / حبوب فائضة">
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>المحافظة والحي</label>
+      <select id="hGov">
+        <option>الكرك - الثنية / جامعة مؤتة</option>
+        <option>عمّان - الجبيهة / الجامعة الأردنية</option>
+        <option>إربد - شارع الجامعة</option>
+        <option>الزرقاء - وسط البلد</option>
+      </select>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label>نوع المادة للتسليم</label>
+      <select id="hType">
+        <option value="glass">عبوات زجاجية نظيفة (للتدوير)</option>
+        <option value="plastic">عبوات بلاستيكية (للتدوير)</option>
+        <option value="expired">دواء منتهي الصلاحية (للتخلص الآمن)</option>
+      </select>
+    </div>
+    <button class="primary" style="width:100%" onclick="submitHousehold()">تسجيل وطلب كود التسليم (+20 نقطة)</button>
+    <div id="hResult" class="alert" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>📍 أقرب نقاط الجمع المعتمدة بالكرك والمحافظات</h2>
+    <p class="muted">يمكنك تسليم الأدوية والعبوات المسجلة لأي صيدلية مشاركة:</p>
+    <ul>
+      <li><b>صيدلية المبادرة البيئية:</b> الكرك - قرب الجامعة (مفتوح)</li>
+      <li><b>صيدلية السلام المعتمدة:</b> عمّان - الجبيهة</li>
+      <li><b>مركز الجمع المركزي:</b> إربد - المدينة الطبية</li>
+    </ul>
+    <div class="alert" style="background:#eef7f5;border-color:#1f7167">
+      <b>💡 نصيحة منزلية:</b> يُرجى فصل العبوات الزجاجية والبلاستيكية الفارغة عن الأدوية السائلة قبل التسليم لتسهيل عملية التدوير.
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- قسم البحث المباشر -->
 <section id="drugSearch" class="page">
 <div class="top"><div><h1>الاستعلام والبحث عن الأدوية</h1><div class="muted">ابحث عن الدواء للتحقق من المادة الفعالة ودواعي الاستعمال بواسطة OpenFDA API</div></div></div>
 <div class="card">
@@ -110,11 +150,12 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 </div>
 </section>
 
+<!-- قسم تسجيل المؤسسات -->
 <section id="register" class="page">
-<div class="top"><div><h1>تسجيل دواء / نفاية دوائية</h1><div class="muted">أدخل بيانات منشأة/حالة تجريبية — لا تُدخل بيانات مرضى أو أدوية حساسة.</div></div></div>
+<div class="top"><div><h1>تسجيل دواء / نفاية دوائية (للمؤسسات)</h1><div class="muted">أدخل بيانات منشأة/حالة تجريبية.</div></div></div>
 <div class="card"><div class="formgrid">
 <div class="field"><label>اسم الدواء التجاري</label><input id="drug" placeholder="مثال: Revanin / Amoxil"></div>
-<div class="field"><label>المادة الفعالة (اختيار سريع أو كتابة)</label>
+<div class="field"><label>المادة الفعالة</label>
   <input id="active" list="activeIngredientsList" placeholder="اختر أو اكتب المادة الفعالة...">
   <datalist id="activeIngredientsList">
     <option value="Paracetamol"></option>
@@ -123,12 +164,9 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
     <option value="Metformin"></option>
     <option value="Omeprazole"></option>
     <option value="Aspirin"></option>
-    <option value="Ciprofloxacin"></option>
-    <option value="Atorvastatin"></option>
   </datalist>
 </div>
-<div class="field"><label>الشكل الدوائي</label><select id="dosageForm"><option>أقراص / حبوب</option><option>كبسولات</option><option>شراب سائل</option><option>مرهم / كريم</option><option>حقن / أمبولات</option><option>أخرى</option></select></div>
-<div class="field"><label>الكمية المتبقية (أقراص / مل)</label><input id="quantity" placeholder="مثال: 20 قرص / 100 ml"></div>
+<div class="field"><label>الشكل الدوائي</label><select id="dosageForm"><option>أقراص / حبوب</option><option>كبسولات</option><option>شراب سائل</option><option>أخرى</option></select></div>
 <div class="field"><label>حالة سلامة العبوة</label>
   <select id="packageCondition">
     <option value="intact">مغلقة بالكامل وسليمة</option>
@@ -137,102 +175,63 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
   </select>
 </div>
 <div class="field"><label>تاريخ الانتهاء</label><input id="expDate" type="date"></div>
-<div class="field"><label>نوع النفاية</label><select id="wasteType">
-<option>منتهية الصلاحية</option><option>غير مستخدمة (فائضة)</option><option>مرتجعة من مريض</option><option>عبوة فارغة</option></select></div>
 <div class="field"><label>نوع مادة العبوة</label><select id="packaging">
-<option value="glass">زجاج طبّي</option><option value="plastic">بلاستيك (HDPE/PET)</option><option value="aluminum">ألومنيوم / Blister</option><option value="other">مواد أخرى</option></select></div>
-<div class="field"><label>نوع المنشأة</label><select id="facility"><option>صيدلية خاصة</option><option>مستشفى حكومي / خاص</option><option>مركز صحي</option><option>مختبر طِبي</option><option>منزل / أفراد</option></select></div>
-<div class="field"><label>المحافظة</label><select id="gov"><option>الكرك</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option><option>العقبة</option><option>أخرى</option></select></div>
-<div class="field full"><label>ملاحظات إضافية</label><textarea id="notes" rows="2" placeholder="معلومات عن ظروف التخزين أو حالة العبوة..."></textarea></div>
-</div><div id="expiryStatus" class="alert" style="display:none"></div>
-<div class="actions"><button class="primary" onclick="assess()">تسجيل وإجراء تقييم أولي</button><button class="secondary" onclick="show('dashboard')">إلغاء</button></div>
-<div id="saved" class="alert" style="display:none">تم إنشاء السجل <b id="newid"></b> كنموذج تجريبي. يمكنك الانتقال إلى صفحة التقييم.</div>
+<option value="glass">زجاج طبّي</option><option value="plastic">بلاستيك (HDPE/PET)</option><option value="aluminum">ألومنيوم</option></select></div>
+<div class="field"><label>المحافظة</label><select id="gov"><option>الكرك</option><option>عمّان</option><option>إربد</option><option>الزرقاء</option></select></div>
+<div class="field full"><label>ملاحظات إضافية</label><textarea id="notes" rows="2"></textarea></div>
+</div>
+<div class="actions"><button class="primary" onclick="assess()">تسجيل وإجراء تقييم أولي</button></div>
+<div id="saved" class="alert" style="display:none">تم إنشاء السجل <b id="newid"></b> كنموذج تجريبي.</div>
 </div>
 </section>
 
+<!-- قسم التقييم والتتبع والتقارير -->
 <section id="assessment" class="page">
-<div class="top"><div><h1>التصنيف والتقييم الأولي</h1><div class="muted">هذا نموذج بحثي وليس تصريحاً للتخلص أو إعادة الاستخدام.</div></div><span class="badge">Research Screening</span></div>
-<div class="row"><div class="card"><h2>ملخص السجل <span id="aid">PG-0128</span></h2><div class="pillrow" id="assessPills"><span class="pill">أدوية منتهية</span><span class="pill">منشأة صحية</span><span class="pill">الأردن</span></div><div class="alert">يجب أن تتم عملية الجمع والنقل والمعالجة بواسطة جهات مؤهلة ووفق المتطلبات التنظيمية.</div></div>
-<div class="card" style="text-align:center"><div class="muted">مؤشر الفرز البحثي</div><div class="score" id="assessScore">78%</div><div class="muted">ليست شهادة سلامة</div></div></div>
-<div class="card" style="margin-top:18px"><h2>المسار المقترح</h2><div class="timeline">
-<div class="step done"><div class="dot"></div><span>تسجيل</span></div><div class="step done"><div class="dot"></div><span>جمع</span></div><div class="step current"><div class="dot"></div><span>معالجة آمنة</span></div><div class="step"><div class="dot"></div><span>فحص مختبري</span></div><div class="step"><div class="dot"></div><span>قرار نهائي</span></div></div>
+<div class="top"><div><h1>التصنيف والتقييم الأولي</h1><div class="muted">نموذج فرز وتصنيف آمن للنفايات الدوائية.</div></div></div>
+<div class="row"><div class="card"><h2>ملخص السجل <span id="aid">PG-0128</span></h2><div class="pillrow" id="assessPills"><span class="pill">أدوية منتهية</span></div></div>
+<div class="card" style="text-align:center"><div class="muted">مؤشر الفرز البحثي</div><div class="score" id="assessScore">78%</div></div></div>
+<div class="card" style="margin-top:18px">
 <h2>النتيجة والمسار الموصى به</h2>
 <p><b id="assessResultTitle">Candidate for Laboratory Testing</b></p>
-<p class="muted" id="assessResultDesc">إذا كانت هناك دراسة على مواد البناء أو التدوير، فهي تبدأ بعد المعالجة الآمنة وباختبارات السلامة والرشح والأداء المناسبة.</p>
+<p class="muted" id="assessResultDesc">إرشادات المعالجة والفرز.</p>
 <button class="primary" onclick="show('tracking')">فتح التتبع ورؤية QR</button></div>
 </section>
 
 <section id="tracking" class="page">
-<div class="top"><div><h1>التتبع الذكي توليد رمز QR</h1><div class="muted">كل سجل له رقم فريد مربوط بـ QR تلقائي للحاوية.</div></div></div>
-<div class="card" style="margin-bottom:18px">
-<h2>البحث برقم QR</h2>
-<div style="display:flex;gap:10px;flex-wrap:wrap">
-<input id="qrInput" placeholder="مثال: PG-0128" style="flex:1;min-width:220px;padding:12px;border:1px solid #d7e4e0;border-radius:10px">
-<button class="primary" onclick="lookupQR()">عرض السجل</button>
-</div>
-<div id="qrResult" class="alert" style="display:none"></div>
-</div>
+<div class="top"><div><h1>التتبع الذكي توليد رمز QR</h1><div class="muted">رمز QR فريد لتتبع الشحنات والعبوات.</div></div></div>
 <div class="card"><div class="row" style="margin:0"><div><h2 id="currentTrackID">PG-0128</h2><div class="timeline">
-<div class="step done"><div class="dot"></div><span>مسجل</span></div><div class="step done"><div class="dot"></div><span>تم الجمع</span></div><div class="step current"><div class="dot"></div><span>النقل</span></div><div class="step"><div class="dot"></div><span>المعالجة</span></div><div class="step"><div class="dot"></div><span>المختبر</span></div>
-</div><div class="alert">الخطوة الحالية: النقل إلى جهة معالجة/استلام مؤهلة.</div></div>
+<div class="step done"><div class="dot"></div><span>مسجل</span></div><div class="step done"><div class="dot"></div><span>تم الجمع</span></div><div class="step current"><div class="dot"></div><span>النقل</span></div><div class="step"><div class="dot"></div><span>المعالجة</span></div></div></div>
 <div style="text-align:center">
   <div id="qrcodeCanvas" class="qr-box"></div>
   <p><b id="qrCodeLabel">QR: PG-0128</b></p>
-  <button class="secondary" onclick="alert('في النسخة الحقيقية يتم تحديث الحالة من قاعدة البيانات عند مسح QR عبر كاميرا الهاتف.')">محاكاة مسح QR</button>
 </div></div></div>
 </section>
 
 <section id="logistics" class="page">
-  <div class="top">
-    <div><h1>الجمع واللوجستيات</h1>
-    <div class="muted">تصور رقمي لتنظيم مسار الجمع والنقل إلى الجهات المؤهلة.</div></div>
-    <span class="badge">Concept</span>
-  </div>
-  <div class="grid">
-    <div class="card"><div class="muted">جاهزة للجمع</div><div class="metric">24</div></div>
-    <div class="card"><div class="muted">قيد النقل</div><div class="metric">8</div></div>
-    <div class="card"><div class="muted">للمعالجة الخاصة</div><div class="metric">17</div></div>
-    <div class="card"><div class="muted">عبوات للتدوير</div><div class="metric">31</div></div>
-  </div>
-  <div class="card" style="margin-top:18px">
-    <h2>مسار السجل PG-0128</h2>
-    <div class="timeline">
-      <div class="step done"><div class="dot"></div><span>تسجيل</span></div>
-      <div class="step done"><div class="dot"></div><span>تنبيه</span></div>
-      <div class="step current"><div class="dot"></div><span>جمع</span></div>
-      <div class="step"><div class="dot"></div><span>معالجة/تدوير</span></div>
-      <div class="step"><div class="dot"></div><span>إغلاق</span></div>
-    </div>
-    <div class="alert"><b>ملاحظة:</b> المسار المعروض تجريبي. أي جمع أو نقل فعلي يجب أن يتم بواسطة جهات مؤهلة ووفق المتطلبات التنظيمية.</div>
-  </div>
+  <div class="top"><div><h1>الجمع واللوجستيات</h1><div class="muted">تنظيم مسار الجمع والنقل.</div></div></div>
+  <div class="card"><h2>مسار الجمع والترتيب اللوجستي</h2><div class="alert">جميع عمليات الجمع والنقل تتم بالتعاون مع الجهات المعتمدة.</div></div>
 </section>
 
 <section id="circular" class="page">
-<div class="top"><div><h1>المواد الدائرية واختبارات السلامة</h1><div class="muted">وحدة بحثية تربط نتائج المختبر بإمكانية الاستفادة من المخلفات بعد المعالجة.</div></div></div>
-<div class="card"><h2>سير العمل البحثي والتدوير</h2><div class="timeline">
-<div class="step done"><div class="dot"></div><span>معالجة آمنة</span></div><div class="step done"><div class="dot"></div><span>تحضير عينة</span></div><div class="step current"><div class="dot"></div><span>اختبارات الرشح</span></div><div class="step"><div class="dot"></div><span>تحليل النتائج</span></div><div class="step"><div class="dot"></div><span>إعادة استخدام محتملة</span></div></div>
-<table><tr><th>الاختبار المخبري</th><th>الحالة</th><th>الهدف والحدود البيئية</th></tr>
-<tr><td>Leaching Test (اختبار الرشح)</td><td><span class="status risk">بانتظار المختبر</span></td><td>قياس تركيز الملوثات الدوائية في المياه (أقل من 0.1 µg/L)</td></tr>
-<tr><td>Compressive Strength (مقاومة الضغط)</td><td><span class="status risk">بانتظار المختبر</span></td><td>تقييم الأداء الميكانيكي للمكونات خرسانية/بلاستيكية</td></tr>
-<tr><td>Environmental Safety (المأمونية البيئية)</td><td><span class="status risk">بانتظار المختبر</span></td><td>التأكد من عدم وجود سمية كيميائية متبقية</td></tr></table>
-<div class="alert"><b>قاعدة مهمة:</b> المنصة لا تقول إن الدواء نفسه يصبح مادة بناء. أي إعادة استخدام محتملة هي موضوع بحث مخبري بعد المعالجة الآمنة وبموافقة الجهات المختصة.</div>
-</div>
+<div class="top"><div><h1>المواد الدائرية واختبارات السلامة</h1><div class="muted">دراسة إمكانية إعادة تدوير مواد التغليف والعبوات.</div></div></div>
+<div class="card"><h2>الفحوصات البيئية والميكانيكية للعبوات</h2><p class="muted">تخضع العبوات الزجاجية والبلاستيكية لإعادة تدوير صناعي بعد الفحص والتعقيم.</p></div>
 </section>
 
 <section id="reports" class="page">
-<div class="top"><div><h1>التقارير والاستطلاعات</h1><div class="muted">بيانات استطلاع تجريبي يمكن استبدالها ببيانات حقيقية مجهولة الهوية.</div></div></div>
-<div class="grid"><div class="card"><div class="muted">صيدليات شاركت</div><div class="metric">42</div></div><div class="card"><div class="muted">أكثر طريقة تخلص مسجلة</div><div class="metric" style="font-size:20px">إرجاع للموزع</div></div><div class="card"><div class="muted">تحتاج توعية</div><div class="metric">19</div></div><div class="card"><div class="muted">محافظات ممثلة</div><div class="metric">6</div></div></div>
-<div class="card" style="margin-top:18px"><h2>أسئلة الاستطلاع المقترحة</h2><ol><li>كمية النفايات الدوائية التقريبية شهرياً؟</li><li>ما الطريقة المعتادة للتعامل معها؟</li><li>هل يتم فصل النفايات الدوائية عن النفايات العامة؟</li><li>هل توجد آلية موثقة للجمع والتخلص؟</li><li>ما أكثر أنواع النفايات الدوائية شيوعاً؟</li></ol><p class="muted">لا تجمعوا أسماء مرضى أو وصفات أو بيانات شخصية غير لازمة للمشروع.</p></div>
+<div class="top"><div><h1>التقارير والاستطلاعات</h1><div class="muted">إحصائيات المنصة ومشاركات الأسر والصيدليات.</div></div></div>
+<div class="card"><h2>إحصائيات الأثر البيئي للمشروع</h2><p class="muted">تم حماية مئات الليترات من المياه الجوفية من التلوث الدوائي من خلال تجميع النفايات المنزلية والمؤسسية.</p></div>
 </section>
 
 <div class="copyright-footer">
-  جميع حقوق الملكية الفكرية والتصميم محفوظة © 2026 <b>Recycle Rx Jordan</b> • تطوير وإعداد المشروع للبحث الأكاديمي.
+  جميع حقوق الملكية الفكرية والتصميم محفوظة © 2026 <b>Recycle Rx Jordan</b> • إعداد وتطوير المشروع.
 </div>
 </main></div>
 
 <script>
 let counter = 128;
+let householdCounter = 45;
 let currentID = 'PG-0128';
+let userPoints = 150;
 
 function show(id, btn){
  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
@@ -245,13 +244,34 @@ function show(id, btn){
 function generateQRCode(text){
  const container = document.getElementById('qrcodeCanvas');
  container.innerHTML = '';
- new QRCode(container, {
-  text: text,
-  width: 110,
-  height: 110
- });
+ new QRCode(container, { text: text, width: 110, height: 110 });
  document.getElementById('qrCodeLabel').innerText = 'QR: ' + text;
  document.getElementById('currentTrackID').innerText = text;
+}
+
+function submitHousehold(){
+ const item = document.getElementById('hItem').value.trim();
+ const res = document.getElementById('hResult');
+ if(!item){
+   res.innerHTML = '🔴 يرجى كتابة اسم الدواء أو العبوة أولاً.';
+   res.style.display = 'block';
+   return;
+ }
+ counter++;
+ householdCounter++;
+ userPoints += 20;
+ currentID = 'HM-' + String(counter).padStart(4, '0');
+ 
+ document.getElementById('userPoints').innerText = userPoints;
+ document.getElementById('statHousehold').innerText = householdCounter;
+ document.getElementById('statRegistered').innerText = counter;
+
+ res.innerHTML = `✅ <b>تم التسجيل بنجاح!</b> كود التتبع المنزلي الخاص بك هو: <b>${currentID}</b>.<br>تم إشعار صيدلية الجمع القريبة، وإضافة <b>20 نقطة خضراء</b> لرصيدك!`;
+ res.style.display = 'block';
+
+ const table = document.getElementById('recentTable');
+ const row = table.insertRow(1);
+ row.innerHTML = `<td>${currentID}</td><td>مساهمة منزلية (${item})</td><td>فرز منزلي</td><td>الكرك</td><td><span class="status">بانتظار التسليم</span></td>`;
 }
 
 function assess(){
@@ -266,75 +286,13 @@ function assess(){
  const pkg = document.getElementById('packaging').value;
  const condition = document.getElementById('packageCondition').value;
 
- // تحديث العدادات الإحصائية
  document.getElementById('statRegistered').innerText = counter;
- if(pkg === 'glass' || pkg === 'plastic') {
-   let cur = parseInt(document.getElementById('statRecycle').innerText);
-   document.getElementById('statRecycle').innerText = cur + 1;
- }
 
- // تحديث الجدول في لوحة التحكم
  const table = document.getElementById('recentTable');
  const row = table.insertRow(1);
  row.innerHTML = `<td>${currentID}</td><td>${drugName}</td><td>نفاية مسجلة</td><td>${gov}</td><td><span class="status">مسجل</span></td>`;
 
- // تخصيص التقييم والمسار بناءً على حالة العبوة والمادة
- const pills = document.getElementById('assessPills');
- const resTitle = document.getElementById('assessResultTitle');
- const resDesc = document.getElementById('assessResultDesc');
- const score = document.getElementById('assessScore');
-
- if(condition === 'damaged') {
-   pills.innerHTML = `<span class="pill">عبوة تالفة</span><span class="pill">${gov}</span><span class="pill danger">إتلاف آمن</span>`;
-   score.innerText = '30%';
-   score.style.color = '#a73b35';
-   resTitle.innerText = 'مسار الإتلاف الحراري الآمن (Incineration)';
-   resDesc.innerText = 'نظرًا لتلف العبوة أو حدوث تسريب، يُحظر التدوير وتُحول النفاية مباشرة للفرن الحراري البيئي المعتمد.';
- } else if(pkg === 'glass') {
-   pills.innerHTML = `<span class="pill">زجاج طبي</span><span class="pill">${gov}</span><span class="pill">تدوير زجاج</span>`;
-   score.innerText = '88%';
-   score.style.color = '#238a73';
-   resTitle.innerText = 'مرشح لتدوير الزجاج الطِبي (Glass Recycling)';
-   resDesc.innerText = 'بعد التفريغ والمعالجة الكيميائية الآمنة، تُحول العبوات الزجاجية لمسار إعادة التدوير الصناعي.';
- } else {
-   pills.innerHTML = `<span class="pill">بلاستيك HDPE/PET</span><span class="pill">${gov}</span><span class="pill">تدوير بلاستيك</span>`;
-   score.innerText = '80%';
-   score.style.color = '#238a73';
-   resTitle.innerText = 'مرشح لتدوير البلاستيك ومعالجة الفحوصات المخبرية';
-   resDesc.innerText = 'تخضع العبوة لغسيل صناعي واختبارات رشح قبل إعادة استخدام البوليمرات في تطبيقات آمنة.';
- }
-
- const dateInput = document.getElementById('expDate');
- const box = document.getElementById('expiryStatus');
- if(dateInput && dateInput.value){
-   const expiry = new Date(dateInput.value + 'T00:00:00');
-   const now = new Date();
-   const months = (expiry.getFullYear() - now.getFullYear()) * 12 + (expiry.getMonth() - now.getMonth());
-   if(months < 0){
-     box.innerHTML = '<b>🔴 منتهية الصلاحية:</b> يجب التعامل معها كنفاية وفق الإجراءات المعتمدة.';
-   }else if(months <= 3){
-     box.innerHTML = '<b>🔴 تنبيه عاجل:</b> متبقٍ أقل من 3 أشهر على الانتهاء.';
-   }else if(months <= 6){
-     box.innerHTML = '<b>🟡 تنبيه مبكر:</b> متبقٍ بين 3 و6 أشهر على الانتهاء.';
-   }else{
-     box.innerHTML = '<b>🟢 الحالة:</b> أكثر من 6 أشهر متبقية على الانتهاء.';
-   }
-   box.style.display = 'block';
- }
  setTimeout(() => show('assessment'), 300);
-}
-
-function lookupQR(){
- const value = document.getElementById('qrInput').value.trim().toUpperCase();
- const result = document.getElementById('qrResult');
- if(!value){
-   result.textContent = 'أدخلي رقم QR أولاً.';
- }else{
-   currentID = value;
-   generateQRCode(value);
-   result.innerHTML = '<b>' + value + '</b> — سجل تجريبي تم العثور عليه. الحالة الحالية: النقل إلى جهة معالجة/استلام مؤهلة.';
- }
- result.style.display = 'block';
 }
 
 async function searchFDA(){
@@ -373,14 +331,14 @@ async function searchFDA(){
   }
  } catch(e){
   loadBox.style.display = 'none';
-  errBox.innerHTML = `لم يتم العثور على اسم العلامة التجارية المحلية <b>"${q}"</b> في قاعدة البيانات الأمريكية.<br><br>💡 <b>نصيحة:</b> جربي البحث عن المادة الفعالة بدلاً من الاسم التجاري (مثلاً لـ Revanin أو Rivanine ابحثي عن <b>Paracetamol</b> أو <b>Acetaminophen</b>).`;
+  errBox.innerHTML = `لم يتم العثور على اسم العلامة التجارية <b>"${q}"</b> في قاعدة البيانات.<br><br>💡 <b>نصيحة:</b> جربي البحث عن المادة الفعالة مثل <b>Paracetamol</b> أو <b>Ibuprofen</b>.`;
   errBox.style.display = 'block';
  }
 }
 
-// توليد QR افتراضي عند الفتح
 window.onload = function(){
  generateQRCode('PG-0128');
 };
 </script>
 </body></html>
+
