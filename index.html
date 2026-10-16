@@ -30,7 +30,7 @@ table{width:100%;border-collapse:collapse}th,td{padding:12px;border-bottom:1px s
 <div class="app">
 <aside class="side">
 <div>
-  <div class="logo">Pharma<span>Guard</span></div>
+  <div class="logo">Recycle <span>Rx</span></div>
   <div class="nav">
     <button class="active" onclick="show('dashboard',this)">لوحة التحكم</button>
     <button onclick="show('household',this)">🏠 خدمة المنازل والأفراد</button>
@@ -249,6 +249,19 @@ function generateQRCode(text){
  document.getElementById('currentTrackID').innerText = text;
 }
 
+function addRecentRecord(id, source, type, gov, statusText, statusClass = 'status'){
+ const row = document.getElementById('recentTable').insertRow(1);
+ [id, source, type, gov].forEach(value => {
+   const cell = row.insertCell();
+   cell.textContent = value;
+ });
+ const statusCell = row.insertCell();
+ const badge = document.createElement('span');
+ badge.className = statusClass;
+ badge.textContent = statusText;
+ statusCell.appendChild(badge);
+}
+
 function submitHousehold(){
  const item = document.getElementById('hItem').value.trim();
  const res = document.getElementById('hResult');
@@ -257,6 +270,7 @@ function submitHousehold(){
    res.style.display = 'block';
    return;
  }
+ const gov = document.getElementById('hGov').value;
  counter++;
  householdCounter++;
  userPoints += 20;
@@ -266,12 +280,10 @@ function submitHousehold(){
  document.getElementById('statHousehold').innerText = householdCounter;
  document.getElementById('statRegistered').innerText = counter;
 
- res.innerHTML = `✅ <b>تم التسجيل بنجاح!</b> كود التتبع المنزلي الخاص بك هو: <b>${currentID}</b>.<br>تم إشعار صيدلية الجمع القريبة، وإضافة <b>20 نقطة خضراء</b> لرصيدك!`;
+ res.textContent = `تم إنشاء طلب تجريبي برقم ${currentID}. لم يتم إرسال إشعار فعلي إلى الصيدلية. أُضيفت 20 نقطة تجريبية إلى رصيد العرض.`;
  res.style.display = 'block';
 
- const table = document.getElementById('recentTable');
- const row = table.insertRow(1);
- row.innerHTML = `<td>${currentID}</td><td>مساهمة منزلية (${item})</td><td>فرز منزلي</td><td>الكرك</td><td><span class="status">بانتظار التسليم</span></td>`;
+ addRecentRecord(currentID, `مساهمة منزلية (${item})`, 'فرز منزلي', gov, 'بانتظار التسليم (تجريبي)');
 }
 
 function assess(){
@@ -288,9 +300,7 @@ function assess(){
 
  document.getElementById('statRegistered').innerText = counter;
 
- const table = document.getElementById('recentTable');
- const row = table.insertRow(1);
- row.innerHTML = `<td>${currentID}</td><td>${drugName}</td><td>نفاية مسجلة</td><td>${gov}</td><td><span class="status">مسجل</span></td>`;
+ addRecentRecord(currentID, drugName, 'نفاية مسجلة', gov, 'مسجل (تجريبي)');
 
  setTimeout(() => show('assessment'), 300);
 }
@@ -331,7 +341,7 @@ async function searchFDA(){
   }
  } catch(e){
   loadBox.style.display = 'none';
-  errBox.innerHTML = `لم يتم العثور على اسم العلامة التجارية <b>"${q}"</b> في قاعدة البيانات.<br><br>💡 <b>نصيحة:</b> جربي البحث عن المادة الفعالة مثل <b>Paracetamol</b> أو <b>Ibuprofen</b>.`;
+  errBox.textContent = `لم يتم العثور على اسم العلامة التجارية "${q}" في قاعدة البيانات. نصيحة: جربي البحث عن المادة الفعالة مثل Paracetamol أو Ibuprofen.`;
   errBox.style.display = 'block';
  }
 }
